@@ -1,0 +1,178 @@
+basePath: /
+definitions:
+  main.CreateUserRequest:
+    properties:
+      email:
+        example: alice@example.com
+        type: string
+      name:
+        example: Alice
+        type: string
+    required:
+    - email
+    - name
+    type: object
+  main.ErrorResponse:
+    properties:
+      error:
+        example: User not found
+        type: string
+    type: object
+  main.MessageResponse:
+    properties:
+      message:
+        example: User deleted
+        type: string
+    type: object
+  main.UpdateUserRequest:
+    properties:
+      email:
+        example: alice.updated@example.com
+        type: string
+      name:
+        example: Alice Updated
+        type: string
+    type: object
+  main.User:
+    properties:
+      email:
+        example: alice@example.com
+        type: string
+      id:
+        example: 1
+        type: integer
+      name:
+        example: Alice
+        type: string
+    required:
+    - email
+    - name
+    type: object
+host: localhost:5000
+info:
+  contact: {}
+  description: A lightweight Go Gin-based REST API for managing users (Create, Read,
+    Update, Delete) with in-memory data storage.
+  title: User Management API
+  version: "1.0"
+paths:
+  /users:
+    get:
+      description: Get a list of all users
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/main.User'
+            type: array
+      summary: Get all users
+      tags:
+      - Users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with name and email
+      parameters:
+      - description: User data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Create a new user
+      tags:
+      - Users
+  /users/{id}:
+    delete:
+      description: Delete a user by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.MessageResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Delete a user
+      tags:
+      - Users
+    get:
+      description: Get user data by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.User'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Get a user by ID
+      tags:
+      - Users
+    put:
+      consumes:
+      - application/json
+      description: Update user data by user ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated user data
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/main.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/main.ErrorResponse'
+      summary: Update a user
+      tags:
+      - Users
+swagger: "2.0"
